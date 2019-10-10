@@ -1,6 +1,17 @@
-Although many of these recipes still work, this repo is now deprecated, moving work to https://github.com/kubernetes-sigs/sig-storage-lib-external-provisioner, come join us there !  
+# Deepnote Fork readme
+## 101
+This is a fork of the K8 External Storage repo. It is massive, but we actually only modified a small and pretty stand-alone part of it, the `nfs-client`, but in order to build it, you need the whole repo.
 
-# External Storage
+This repo *must* be in your `GOPATH`, otherwise it's not going to build. Once you install go, you can find your `GOPATH` by running `go env`. Obviously you can modify this, but if you just want to build this, don't bother and clone this in `(...)/go/src`
+
+## How to build
+Go to `nfs-client`, go inside the makefile and bump the version. Then run `make run` to compile the app, build a docker image and upload it to our registry with the new version number.
+
+
+# External Storage Original Readme
+
+Although many of these recipes still work, this repo is now deprecated, moving work to https://github.com/kubernetes-sigs/sig-storage-lib-external-provisioner, come join us there !
+
 [![Build Status](https://travis-ci.org/kubernetes-incubator/external-storage.svg?branch=master)](https://travis-ci.org/kubernetes-incubator/external-storage)
 [![GoDoc](https://godoc.org/github.com/kubernetes-incubator/external-storage?status.svg)](https://godoc.org/github.com/kubernetes-incubator/external-storage)
 [![Go Report Card](https://goreportcard.com/badge/github.com/kubernetes-incubator/external-storage)](https://goreportcard.com/report/github.com/kubernetes-incubator/external-storage)
