@@ -16,7 +16,7 @@ ifeq ($(REGISTRY),)
         REGISTRY = gcr.io/deepnote-200602/
 endif
 ifeq ($(VERSION),)
-        VERSION = 0.0.1
+        VERSION = 0.0.6
 endif
 IMAGE = $(REGISTRY)nfs-client-provisioner_dn-fork:$(VERSION)
 # IMAGE_ARM = $(REGISTRY)nfs-client-provisioner-arm:$(VERSION)

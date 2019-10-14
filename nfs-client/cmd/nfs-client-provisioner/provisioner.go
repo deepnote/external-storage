@@ -29,7 +29,7 @@ import (
 
 	"github.com/golang/glog"
 	"github.com/kubernetes-sigs/sig-storage-lib-external-provisioner/controller"
-	"k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
 	storage "k8s.io/api/storage/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/wait"
@@ -57,21 +57,37 @@ func (p *nfsProvisioner) Provision(options controller.VolumeOptions) (*v1.Persis
 	if options.PVC.Spec.Selector != nil {
 		return nil, fmt.Errorf("claim Selector is not supported")
 	}
-	glog.V(4).Infof("nfs provisioner: VolumeOptions %v", options)
 
 	pvcNamespace := options.PVC.Namespace
 	pvcName := options.PVC.Name
 
-	pvName := strings.Join([]string{pvcNamespace, pvcName, options.PVName}, "-")
+	projectFolderName := strings.Join([]string{pvcNamespace, pvcName, options.PVName}, "-")
+	glog.Infof("Foldername candidate is %s.", projectFolderName)
 
-	fullPath := filepath.Join(mountPath, pvName)
-	glog.V(4).Infof("creating path %s", fullPath)
+	fHandle, err := os.Open(mountPath)
+	if err != nil {
+		glog.Error(err)
+	}
+	folderNames, err := fHandle.Readdirnames(-1)
+	fHandle.Close()
+	if err != nil {
+		glog.Error(err)
+	}
+	for _, fName := range folderNames {
+		if strings.Contains(fName, pvcName) {
+			glog.Infof("Changing name to %s", fName)
+			projectFolderName = fName
+		}
+	}
+
+	fullPath := filepath.Join(mountPath, projectFolderName)
+	glog.Infof("creating path %s", fullPath)
 	if err := os.MkdirAll(fullPath, 0777); err != nil {
 		return nil, errors.New("unable to create directory to provision new pv: " + err.Error())
 	}
 	os.Chmod(fullPath, 0777)
 
-	path := filepath.Join(p.path, pvName)
+	path := filepath.Join(p.path, projectFolderName)
 
 	pv := &v1.PersistentVolume{
 		ObjectMeta: metav1.ObjectMeta{
