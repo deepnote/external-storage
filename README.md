@@ -1,11 +1,10 @@
 # Deepnote Fork readme
-## 101
-This is a fork of the K8 External Storage repo. It is massive, but we actually only modified a small and pretty stand-alone part of it, the `nfs-client`, but in order to build it, you need the whole repo.
+When this provisioner is asked to create a new claim, it checks whether the project already doesn't have one and if it does, it links the claim to the project. We're only changing the `nfs-client`, but in order to build it, you need the whole repo.
 
 This repo *must* be in your `GOPATH`, otherwise it's not going to build. Once you install go, you can find your `GOPATH` by running `go env`. Obviously you can modify this, but if you just want to build this, don't bother and clone this in `(...)/go/src`
 
 ## How to build
-Go to `nfs-client`, go inside the makefile and bump the version. Then run `make run` to compile the app, build a docker image and upload it to our registry with the new version number.
+Go to `nfs-client` folder, use Makefile and run `make run` to compile the app, build a docker image and upload it to our registry with the new version number. Then use the custom Helm chart (found in ops repo) to install this into your cluster.
 
 
 # External Storage Original Readme
